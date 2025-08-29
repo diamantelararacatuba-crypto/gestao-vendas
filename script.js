@@ -1,12 +1,11 @@
-// URL do seu Apps Script
+// ===================== CONFIGURAÇÃO =====================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyauiAXm1X-Mkx4Tn-QpfpLhRhv0LWOTtufAfx3I7ICH32I4q1mYvuW6fg1NlpIzuE/exec';
 
-// Arrays globais
 let vendedores = [];
 let vendas = [];
 let vendedorParaPagar = null;
 
-// =================== UTILITÁRIOS ===================
+// ===================== UTILITÁRIOS =====================
 const formatarMoeda = valor => `R$ ${parseFloat(valor || 0).toFixed(2).replace('.', ',')}`;
 
 const aplicarMascaraMoeda = (input) => {
@@ -15,6 +14,12 @@ const aplicarMascaraMoeda = (input) => {
     valor = valor.replace('.', ',');
     valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     input.value = 'R$ ' + valor;
+};
+
+const aplicarMascaraTelefone = (input) => {
+    let tel = input.value.replace(/\D/g, '');
+    if (tel.length === 11) input.value = `(${tel.substring(0,2)}) ${tel.substring(2,7)}-${tel.substring(7)}`;
+    else if (tel.length === 10) input.value = `(${tel.substring(0,2)}) ${tel.substring(2,6)}-${tel.substring(6)}`;
 };
 
 const mostrarMensagem = (texto, tipo='sucesso') => {
@@ -36,7 +41,7 @@ const mostrarMensagem = (texto, tipo='sucesso') => {
     }, 4000);
 };
 
-// =================== NAVEGAÇÃO ===================
+// ===================== NAVEGAÇÃO =====================
 const pages = document.querySelectorAll('.page');
 const navButtons = document.querySelectorAll('.nav-btn');
 
@@ -45,13 +50,12 @@ navButtons.forEach(btn => {
         const target = btn.dataset.page;
         pages.forEach(p => p.classList.remove('active'));
         document.getElementById(target).classList.add('active');
-
         navButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     });
 });
 
-// =================== FETCH DADOS ===================
+// ===================== FETCH DADOS =====================
 async function fetchVendedores() {
     try {
         const res = await fetch(`${SCRIPT_URL}?sheet=Vendedores`);
@@ -95,7 +99,7 @@ async function fetchVendas() {
     }
 }
 
-// =================== DASHBOARD ===================
+// ===================== DASHBOARD =====================
 function renderDashboard() {
     const dash = document.getElementById('dashboardContent');
     dash.innerHTML = '';
@@ -121,7 +125,7 @@ function renderDashboard() {
     });
 }
 
-// =================== CADASTRO VENDEDOR ===================
+// ===================== CADASTRO VENDEDOR =====================
 const vendedorForm = document.getElementById('vendedorForm');
 vendedorForm.addEventListener('submit', async e => {
     e.preventDefault();
@@ -136,7 +140,8 @@ vendedorForm.addEventListener('submit', async e => {
     if (!nome) return mostrarMensagem('O nome é obrigatório', 'erro');
 
     try {
-        await fetch(`${SCRIPT_URL}?sheet=Vendedores&nome=${encodeURIComponent(nome)}&telefone=${encodeURIComponent(telefone)}&cep=${cep}&rua=${encodeURIComponent(rua)}&numero=${numero}&bairro=${encodeURIComponent(bairro)}&cidade=${encodeURIComponent(cidade)}`);
+        const url = `${SCRIPT_URL}?sheet=Vendedores&action=add&nome=${encodeURIComponent(nome)}&telefone=${encodeURIComponent(telefone)}&cep=${cep}&rua=${encodeURIComponent(rua)}&numero=${numero}&bairro=${encodeURIComponent(bairro)}&cidade=${encodeURIComponent(cidade)}`;
+        await fetch(url);
         mostrarMensagem('Vendedor cadastrado com sucesso!');
         vendedorForm.reset();
         fetchVendedores();
@@ -147,29 +152,8 @@ vendedorForm.addEventListener('submit', async e => {
     }
 });
 
-// =================== AUTO-PREENCHIMENTO CEP ===================
-document.getElementById('vendedorCep').addEventListener('blur', async () => {
-    const cep = document.getElementById('vendedorCep').value.replace(/\D/g,'');
-    if (cep.length !== 8) return;
-
-    try {
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await res.json();
-        if (!data.erro) {
-            document.getElementById('vendedorRua').value = data.logradouro;
-            document.getElementById('vendedorBairro').value = data.bairro;
-            document.getElementById('vendedorCidade').value = data.localidade;
-        }
-    } catch (err) {
-        console.error('Erro ao buscar CEP', err);
-    }
-});
-
-// =================== CADASTRO VENDA ===================
+// ===================== CADASTRO VENDA =====================
 const vendaForm = document.getElementById('vendaForm');
-['vendaValorTotal','vendaValorComissao','valorEntrada'].forEach(id => {
-    document.getElementById(id).addEventListener('input', (e) => aplicarMascaraMoeda(e.target));
-});
 vendaForm.addEventListener('submit', async e => {
     e.preventDefault();
     const vendedorId = document.getElementById('vendaVendedor').value;
@@ -177,35 +161,36 @@ vendaForm.addEventListener('submit', async e => {
     const valorTotal = document.getElementById('vendaValorTotal').value.replace(/\D/g,'') / 100;
     const valorComissao = document.getElementById('vendaValorComissao').value.replace(/\D/g,'') / 100;
     const tipoPagamento = document.getElementById('tipoPagamento').value;
-    const valorEntrada = document.getElementById('valorEntrada').value.replace(/\D/g,'') / 100 || 0;
+    const valorEntrada = document.getElementById('valorEntrada').value ? document.getElementById('valorEntrada').value.replace(/\D/g,'') / 100 : 0;
 
-    if (!vendedorId) return mostrarMensagem('Selecione um vendedor', 'erro');
+    if (!vendedorId || !descricao || !valorTotal || !valorComissao) return mostrarMensagem('Preencha todos os campos obrigatórios', 'erro');
 
     try {
-        await fetch(`${SCRIPT_URL}?sheet=Vendas&vendedorId=${vendedorId}&descricao=${encodeURIComponent(descricao)}&valorTotal=${valorTotal}&valorComissao=${valorComissao}&tipoPagamento=${tipoPagamento}&valorEntrada=${valorEntrada}`);
-        mostrarMensagem('Venda registrada com sucesso!');
+        const url = `${SCRIPT_URL}?sheet=Vendas&action=add&vendedorId=${vendedorId}&descricao=${encodeURIComponent(descricao)}&valorTotal=${valorTotal}&valorComissao=${valorComissao}&tipoPagamento=${tipoPagamento}&valorEntrada=${valorEntrada}`;
+        await fetch(url);
+        mostrarMensagem('Venda cadastrada com sucesso!');
         vendaForm.reset();
         fetchVendas();
         document.querySelector('[data-page="dashboard"]').click();
     } catch (err) {
         console.error(err);
-        mostrarMensagem('Erro ao registrar venda', 'erro');
+        mostrarMensagem('Erro ao cadastrar venda', 'erro');
     }
 });
 
-// =================== DROPDOWN VENDEDORES ===================
+// ===================== DROPDOWN VENDEDORES =====================
 function preencherVendedorDropdown() {
     const select = document.getElementById('vendaVendedor');
     select.innerHTML = '<option value="">Selecione um vendedor</option>';
     vendedores.forEach(v => {
-        const option = document.createElement('option');
-        option.value = v.id;
-        option.textContent = v.nome;
-        select.appendChild(option);
+        const opt = document.createElement('option');
+        opt.value = v.id;
+        opt.textContent = v.nome;
+        select.appendChild(opt);
     });
 }
 
-// =================== MODAL COMISSÃO ===================
+// ===================== MODAL COMISSÃO =====================
 function abrirModal(vendedorId) {
     vendedorParaPagar = vendedorId;
     const vendedor = vendedores.find(v => v.id === vendedorId);
@@ -218,23 +203,42 @@ function fecharModal() {
 }
 
 async function gerarReciboEPagar() {
-    const formaPagamento = document.getElementById('formaPagamentoSelect').value;
     if (!vendedorParaPagar) return;
 
-    try {
-        await fetch(`${SCRIPT_URL}?action=pagarComissao&vendedorId=${vendedorParaPagar}&formaPagamento=${formaPagamento}`);
-        mostrarMensagem('Comissão paga com sucesso!');
-        fetchVendas();
-        fecharModal();
-    } catch (err) {
-        console.error(err);
-        mostrarMensagem('Erro ao pagar comissão', 'erro');
+    const formaPagamento = document.getElementById('formaPagamentoSelect').value;
+    const vendasPendentes = vendas.filter(v => v.vendedorId === vendedorParaPagar && !v.comissaoPaga);
+    const totalComissao = vendasPendentes.reduce((t, v) => t + (v.valorComissao || 0), 0);
+
+    if (totalComissao === 0) return mostrarMensagem('Nenhuma comissão pendente', 'erro');
+
+    for (const venda of vendasPendentes) {
+        const url = `${SCRIPT_URL}?sheet=Vendas&action=pay&id=${venda.id}&formaPagamento=${encodeURIComponent(formaPagamento)}`;
+        await fetch(url);
     }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(`Recibo de Comissão - Diamantelar`, 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Vendedor: ${vendedores.find(v=>v.id===vendedorParaPagar).nome}`, 20, 40);
+    doc.text(`Total Comissão: ${formatarMoeda(totalComissao)}`, 20, 50);
+    doc.text(`Forma de Pagamento: ${formaPagamento}`, 20, 60);
+    doc.save(`Recibo_Comissao_${Date.now()}.pdf`);
+
+    fecharModal();
+    mostrarMensagem('Comissão paga com sucesso!');
+    fetchVendas();
 }
 
-// =================== INICIALIZAÇÃO ===================
+// ===================== INICIALIZAÇÃO =====================
 window.addEventListener('DOMContentLoaded', () => {
     fetchVendedores();
     fetchVendas();
-});
 
+    // Aplicar máscaras
+    document.getElementById('vendedorTelefone').addEventListener('input', e => aplicarMascaraTelefone(e.target));
+    document.getElementById('vendaValorTotal').addEventListener('input', e => aplicarMascaraMoeda(e.target));
+    document.getElementById('vendaValorComissao').addEventListener('input', e => aplicarMascaraMoeda(e.target));
+    document.getElementById('valorEntrada').addEventListener('input', e => aplicarMascaraMoeda(e.target));
+});
