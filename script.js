@@ -44,7 +44,7 @@ async function fetchVendedores() {
         const res = await fetch(`${SCRIPT_URL}?sheet=Vendedores`);
         const data = await res.json();
         vendedores = data.map(v => ({
-            id: v.Id, nome: v.Nome, telefone: v.Telefone,
+            id: v.ID, nome: v.Nome, telefone: v.Telefone,
             cep: v.CEP, rua: v.Rua, numero: v.Numero,
             bairro: v.Bairro, cidade: v.Cidade
         }));
@@ -58,7 +58,7 @@ async function fetchVendas() {
         const res = await fetch(`${SCRIPT_URL}?sheet=Vendas`);
         const data = await res.json();
         vendas = data.map(v => ({
-            id: v.Id, vendedorId: v.id_vendedor,
+            id: v.ID, vendedorId: v.id_vendedor,
             descricao: v.Descricao, valorTotal: v.ValorTotal,
             valorComissao: v.ValorComissao,
             tipoPagamento: v.TipoPagamento,
@@ -141,13 +141,13 @@ function atualizarTotalPagar() {
     if(totalEl) totalEl.textContent=formatarMoeda(total);
 }
 
-// -------------------- GERAR PDF --------------------
+// -------------------- GERAR PDF E PAGAR --------------------
 function gerarReciboEPagar() {
     const checkboxes = document.querySelectorAll('#vendasPendentesContainer input[type="checkbox"]:checked');
     if(checkboxes.length===0){ mostrarMensagem('Selecione pelo menos uma venda','erro'); return; }
 
     const vendedor = vendedores.find(v=>v.id===vendedorParaPagar);
-    const vendasSelecionadas = checkboxes.length>0?Array.from(checkboxes).map(c=>vendas.find(v=>v.id==c.value)):[];
+    const vendasSelecionadas = Array.from(checkboxes).map(c=>vendas.find(v=>v.id==c.value));
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -170,12 +170,11 @@ function gerarReciboEPagar() {
     doc.save(`Recibo_Comissao_${vendedor.nome}.pdf`);
 
     // MARCAR COMO PAGA no Apps Script
-    vendasSelecionadas.forEach(v=>{
-        fetch(SCRIPT_URL, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ action:'pagarComissao', id:v.id })
-        });
+    const ids = vendasSelecionadas.map(v => v.id);
+    fetch(SCRIPT_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'pagarComissao', ids: ids })
     });
 
     fecharModal();
@@ -212,7 +211,7 @@ document.getElementById('vendedorForm').addEventListener('submit', async e=>{
             body: JSON.stringify({ action:'cadastrarVendedor', data:vendedor })
         });
         const data = await res.json();
-        mostrarMensagem(data.message);
+        mostrarMensagem(data.message || 'Vendedor cadastrado');
         fetchVendedores();
         document.getElementById('vendedorForm').reset();
     }catch(err){ console.error(err); mostrarMensagem('Erro ao cadastrar vendedor','erro'); }
@@ -236,7 +235,7 @@ document.getElementById('vendaForm').addEventListener('submit', async e=>{
             body: JSON.stringify({ action:'registrarVenda', data:venda })
         });
         const data = await res.json();
-        mostrarMensagem(data.message);
+        mostrarMensagem(data.message || 'Venda registrada');
         fetchVendas();
         document.getElementById('vendaForm').reset();
     }catch(err){ console.error(err); mostrarMensagem('Erro ao registrar venda','erro'); }
@@ -261,4 +260,3 @@ document.getElementById('vendedorCep').addEventListener('blur', async e=>{
 // -------------------- INIT --------------------
 fetchVendedores();
 fetchVendas();
-
