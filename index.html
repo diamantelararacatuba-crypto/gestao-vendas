@@ -144,6 +144,28 @@
         </section>
     </main>
 
+    <!-- Modal de Comissão Atualizado -->
+<div id="comissaoModal" class="modal">
+    <div class="modal-content max-h-[80vh] overflow-y-auto">
+        <span class="modal-close" onclick="fecharModal()">&times;</span>
+        <h3 class="text-xl font-semibold mb-4">Pagar Comissão</h3>
+        <p class="mb-4">Selecione as vendas para pagar a comissão de <span id="nomeVendedorModal"></span>.</p>
+        
+        <div id="vendasPendentesContainer" class="mb-4"></div>
+
+        <div class="mb-4">
+            <label for="formaPagamentoSelect" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
+            <select id="formaPagamentoSelect" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Depósito">Depósito</option>
+            </select>
+        </div>
+        <button onclick="gerarReciboEPagar()" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow transition-colors">Gerar Recibo e Pagar</button>
+    </div>
+</div>
+
+
     <!-- MODAL COMISSÃO -->
     <div id="comissaoModal" class="modal">
         <div class="modal-content">
@@ -175,3 +197,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+
