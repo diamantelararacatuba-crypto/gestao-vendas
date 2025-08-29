@@ -10,21 +10,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'diamantelar-padrao': {
-                            500: '#503918',
-                            600: '#503918',
-                            700: '#503918',
-                        },
-                        'diamantelar-apoio-1': {
-                            500: '#A1692D',
-                            600: '#A1692D',
-                            700: '#A1692D',
-                        },
-                        'diamantelar-apoio-2': {
-                            500: '#DCC88C',
-                            600: '#DCC88C',
-                            700: '#DCC88C',
-                        }
+                        'diamantelar-padrao': { 500: '#503918', 600: '#503918', 700: '#503918' },
+                        'diamantelar-apoio-1': { 500: '#A1692D', 600: '#A1692D', 700: '#A1692D' },
+                        'diamantelar-apoio-2': { 500: '#DCC88C', 600: '#DCC88C', 700: '#DCC88C' }
                     }
                 }
             }
@@ -32,219 +20,158 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .page {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        .page.active {
-            display: block;
-        }
-        .nav-btn.active {
-            background-color: #DCC88C;
-            color: #503918;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .container-box {
-            background-color: #fff;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            z-index: 10;
-            position: relative;
-        }
-        .logo {
-            max-width: 250px;
-            margin: 0 auto;
-        }
-        .background-logo {
-            background-image: url('PNG C FUNDO.jpg');
-            background-repeat: repeat;
-            background-size: 200px;
-            opacity: 0.1;
-            transform: rotate(-30deg);
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            z-index: 0;
-        }
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-        }
-        /* Estilos do Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-        }
-        .modal-content {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-        .modal-close {
-            float: right;
-            cursor: pointer;
-            font-size: 1.5rem;
-            line-height: 1;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .page.active { display: block; }
+        .nav-btn.active { background-color: #DCC88C; color: #503918; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .container-box { background-color: #fff; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 2rem; z-index: 10; position: relative; }
+        .background-logo { background-image: url('PNG C FUNDO.jpg'); background-repeat: repeat; background-size: 200px; opacity: 0.1; transform: rotate(-30deg); position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; z-index: 0; }
+        .content-wrapper { position: relative; z-index: 10; }
+        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:50; }
+        .modal-content { background-color:#fff; padding:2rem; border-radius:1rem; box-shadow:0 4px 6px rgba(0,0,0,0.1); max-width:500px; width:90%; text-align:center; max-height:80%; overflow-y:auto; }
+        .modal-close { float:right; cursor:pointer; font-size:1.5rem; line-height:1; }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center py-10">
 
-    <div class="background-logo"></div>
+<div class="background-logo"></div>
+<div class="w-full max-w-4xl px-4 content-wrapper">
 
-    <div class="w-full max-w-4xl px-4 content-wrapper">
-        
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-gray-900">Gestão de Vendas Diamantelar</h1>
-        </header>
+    <header class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-gray-900">Gestão de Vendas Diamantelar</h1>
+    </header>
 
-        <nav id="nav" class="bg-white p-2 rounded-xl flex justify-around shadow-sm mb-6">
-            <button class="nav-btn active flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="dashboard">Dashboard</button>
-            <button class="nav-btn flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="add-vendedor">Novo Vendedor</button>
-            <button class="nav-btn flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="add-venda">Nova Venda</button>
-        </nav>
+    <nav id="nav" class="bg-white p-2 rounded-xl flex justify-around shadow-sm mb-6">
+        <button class="nav-btn active flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="dashboard">Dashboard</button>
+        <button class="nav-btn flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="add-vendedor">Novo Vendedor</button>
+        <button class="nav-btn flex-1 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors" data-page="add-venda">Nova Venda</button>
+    </nav>
 
-        <main>
-            <section id="dashboard" class="page active">
-                <div class="container-box">
-                    <div class="mb-6 flex justify-between items-center">
-                        <h2 class="text-2xl font-semibold text-gray-800">Dashboard de Vendas</h2>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-500">Total Geral de Vendas</p>
-                            <p id="totalGeralVendas" class="text-3xl font-bold text-diamantelar-padrao-600"></p>
-                        </div>
+    <main>
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+            <div class="container-box">
+                <div class="mb-6 flex justify-between items-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Dashboard de Vendas</h2>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">Total Geral de Vendas</p>
+                        <p id="totalGeralVendas" class="text-3xl font-bold text-diamantelar-padrao-600"></p>
                     </div>
-                    <div id="dashboardContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        </div>
                 </div>
-            </section>
-
-            <section id="add-vendedor" class="page">
-                <div class="container-box">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Cadastrar Novo Vendedor</h2>
-                    <form id="vendedorForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="col-span-1 md:col-span-2">
-                            <label for="vendedorNome" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
-                            <input type="text" id="vendedorNome" name="vendedorNome" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="vendedorTelefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-                            <input type="tel" id="vendedorTelefone" name="vendedorTelefone" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="vendedorCep" class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
-                            <input type="text" id="vendedorCep" name="vendedorCep" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="vendedorRua" class="block text-sm font-medium text-gray-700 mb-1">Rua</label>
-                            <input type="text" id="vendedorRua" name="vendedorRua" readonly class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500 bg-gray-100">
-                        </div>
-                        <div>
-                            <label for="vendedorNumero" class="block text-sm font-medium text-gray-700 mb-1">Número</label>
-                            <input type="text" id="vendedorNumero" name="vendedorNumero" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="vendedorBairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro</label>
-                            <input type="text" id="vendedorBairro" name="vendedorBairro" readonly class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500 bg-gray-100">
-                        </div>
-                        <div>
-                            <label for="vendedorCidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
-                            <input type="text" id="vendedorCidade" name="vendedorCidade" readonly class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500 bg-gray-100">
-                        </div>
-                        <div class="col-span-1 md:col-span-2 flex justify-end">
-                            <button type="submit" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow transition-colors">Cadastrar Vendedor</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-
-            <section id="add-venda" class="page">
-                <div class="container-box">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Registrar Nova Venda</h2>
-                    <form id="vendaForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="vendaVendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor</label>
-                            <select id="vendaVendedor" name="vendaVendedor" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></select>
-                        </div>
-                        <div class="col-span-1 md:col-span-2">
-                            <label for="vendaDescricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição da Venda</label>
-                            <textarea id="vendaDescricao" name="vendaDescricao" rows="3" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></textarea>
-                        </div>
-                        <div>
-                            <label for="vendaValorTotal" class="block text-sm font-medium text-gray-700 mb-1">Valor Total</label>
-                            <input type="text" id="vendaValorTotal" name="vendaValorTotal" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="vendaValorComissao" class="block text-sm font-medium text-gray-700 mb-1">Valor da Comissão</label>
-                            <input type="text" id="vendaValorComissao" name="vendaValorComissao" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div>
-                            <label for="tipoPagamento" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Pagamento</label>
-                            <select id="tipoPagamento" name="tipoPagamento" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                                <option value="À Vista">À Vista</option>
-                                <option value="A Prazo sem Entrada">A Prazo sem Entrada</option>
-                                <option value="A Prazo com Entrada">A Prazo com Entrada</option>
-                            </select>
-                        </div>
-                        <div id="entradaContainer" style="display: none;">
-                            <label for="valorEntrada" class="block text-sm font-medium text-gray-700 mb-1">Valor da Entrada</label>
-                            <input type="text" id="valorEntrada" name="valorEntrada" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        </div>
-                        <div class="col-span-1 md:col-span-2 flex justify-end">
-                            <button type="submit" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow transition-colors">Registrar Venda</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </main>
-        
-        <div id="comissaoModal" class="modal">
-            <div class="modal-content">
-                <span class="modal-close" onclick="fecharModal()">&times;</span>
-                <h3 class="text-xl font-semibold mb-4">Pagar Comissão</h3>
-                <p class="mb-4">Selecione a forma de pagamento da comissão de **<span id="nomeVendedorModal"></span>**.</p>
-                <div class="mb-4">
-                    <label for="formaPagamentoSelect" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
-                    <select id="formaPagamentoSelect" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                        <option value="Pix">Pix</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Depósito">Depósito</option>
-                    </select>
-                </div>
-                <button onclick="gerarReciboEPagar()" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow transition-colors">Gerar Recibo e Pagar</button>
+                <div id="dashboardContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
-        </div>
+        </section>
 
-        <div id="messageContainer" class="fixed bottom-5 right-5 z-50 transition-opacity duration-300 ease-in-out opacity-0">
-            <div id="messageBox" class="p-4 rounded-lg shadow-lg">
-                <p id="messageText" class="font-medium"></p>
+        <!-- CADASTRO VENDEDOR -->
+        <section id="add-vendedor" class="page">
+            <div class="container-box">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Cadastrar Novo Vendedor</h2>
+                <form id="vendedorForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-1 md:col-span-2">
+                        <label for="vendedorNome" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                        <input type="text" id="vendedorNome" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
+                    </div>
+                    <div>
+                        <label for="vendedorTelefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="tel" id="vendedorTelefone" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
+                    </div>
+                    <div>
+                        <label for="vendedorCep" class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
+                        <input type="text" id="vendedorCep" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
+                    </div>
+                    <div>
+                        <label for="vendedorRua" class="block text-sm font-medium text-gray-700 mb-1">Rua</label>
+                        <input type="text" id="vendedorRua" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100">
+                    </div>
+                    <div>
+                        <label for="vendedorNumero" class="block text-sm font-medium text-gray-700 mb-1">Número</label>
+                        <input type="text" id="vendedorNumero" class="w-full border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div>
+                        <label for="vendedorBairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro</label>
+                        <input type="text" id="vendedorBairro" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100">
+                    </div>
+                    <div>
+                        <label for="vendedorCidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
+                        <input type="text" id="vendedorCidade" readonly class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100">
+                    </div>
+                    <div class="col-span-1 md:col-span-2 flex justify-end">
+                        <button type="submit" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow">Cadastrar Vendedor</button>
+                    </div>
+                </form>
             </div>
+        </section>
+
+        <!-- CADASTRO VENDA -->
+        <section id="add-venda" class="page">
+            <div class="container-box">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Registrar Nova Venda</h2>
+                <form id="vendaForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="vendaVendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor</label>
+                        <select id="vendaVendedor" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></select>
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label for="vendaDescricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição da Venda</label>
+                        <textarea id="vendaDescricao" rows="3" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="vendaValorTotal" class="block text-sm font-medium text-gray-700 mb-1">Valor Total</label>
+                        <input type="text" id="vendaValorTotal" required class="w-full border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div>
+                        <label for="vendaValorComissao" class="block text-sm font-medium text-gray-700 mb-1">Valor da Comissão</label>
+                        <input type="text" id="vendaValorComissao" required class="w-full border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div>
+                        <label for="tipoPagamento" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Pagamento</label>
+                        <select id="tipoPagamento" required class="w-full border-gray-300 rounded-lg shadow-sm">
+                            <option value="À Vista">À Vista</option>
+                            <option value="A Prazo sem Entrada">A Prazo sem Entrada</option>
+                            <option value="A Prazo com Entrada">A Prazo com Entrada</option>
+                        </select>
+                    </div>
+                    <div id="entradaContainer" style="display:none;">
+                        <label for="valorEntrada" class="block text-sm font-medium text-gray-700 mb-1">Valor da Entrada</label>
+                        <input type="text" id="valorEntrada" class="w-full border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div class="col-span-1 md:col-span-2 flex justify-end">
+                        <button type="submit" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow">Registrar Venda</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL COMISSÃO -->
+    <div id="comissaoModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="fecharModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4">Pagar Comissão</h3>
+            <p class="mb-4">Selecione as vendas de <span id="nomeVendedorModal"></span> para pagar a comissão:</p>
+            <div id="vendasPendentesContainer" class="mb-4 max-h-64 overflow-y-auto"></div>
+            <div class="mb-4">
+                <label for="formaPagamentoSelect" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
+                <select id="formaPagamentoSelect" class="w-full border-gray-300 rounded-lg shadow-sm">
+                    <option value="Pix">Pix</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Depósito">Depósito</option>
+                </select>
+            </div>
+            <button onclick="gerarReciboEPagar()" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow">Gerar Recibo e Pagar</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <div id="messageContainer" class="fixed bottom-5 right-5 z-50 transition-opacity duration-300 ease-in-out opacity-0">
+        <div id="messageBox" class="p-4 rounded-lg shadow-lg">
+            <p id="messageText" class="font-medium"></p>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
