@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Vendas</title>
+    <title>Gestão de Vendas Diamantelar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -112,66 +112,88 @@
                         <label for="vendaVendedor" class="block text-sm font-medium text-gray-700 mb-1">Vendedor</label>
                         <select id="vendaVendedor" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></select>
                     </div>
-                    <div class="col-span-1 md:col-span-2">
-                        <label for="vendaDescricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição da Venda</label>
-                        <textarea id="vendaDescricao" rows="3" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500"></textarea>
+                    <div>
+                        <label for="vendaDescricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <input type="text" id="vendaDescricao" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
                     </div>
                     <div>
                         <label for="vendaValorTotal" class="block text-sm font-medium text-gray-700 mb-1">Valor Total</label>
-                        <input type="text" id="vendaValorTotal" required class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <input type="number" id="vendaValorTotal" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
                     </div>
                     <div>
-                        <label for="vendaValorComissao" class="block text-sm font-medium text-gray-700 mb-1">Valor da Comissão</label>
-                        <input type="text" id="vendaValorComissao" required class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <label for="vendaValorComissao" class="block text-sm font-medium text-gray-700 mb-1">Valor Comissão</label>
+                        <input type="number" id="vendaValorComissao" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
                     </div>
                     <div>
                         <label for="tipoPagamento" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Pagamento</label>
-                        <select id="tipoPagamento" required class="w-full border-gray-300 rounded-lg shadow-sm">
-                            <option value="À Vista">À Vista</option>
-                            <option value="A Prazo sem Entrada">A Prazo sem Entrada</option>
-                            <option value="A Prazo com Entrada">A Prazo com Entrada</option>
+                        <select id="tipoPagamento" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartão">Cartão</option>
+                            <option value="PIX">PIX</option>
                         </select>
                     </div>
-                    <div id="entradaContainer" style="display:none;">
-                        <label for="valorEntrada" class="block text-sm font-medium text-gray-700 mb-1">Valor da Entrada</label>
-                        <input type="text" id="valorEntrada" class="w-full border-gray-300 rounded-lg shadow-sm">
+                    <div>
+                        <label for="valorEntrada" class="block text-sm font-medium text-gray-700 mb-1">Valor Entrada (opcional)</label>
+                        <input type="number" id="valorEntrada" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
                     </div>
                     <div class="col-span-1 md:col-span-2 flex justify-end">
-                        <button type="submit" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow">Registrar Venda</button>
+                        <button type="submit" class="bg-diamantelar-apoio-1-600 hover:bg-diamantelar-apoio-1-700 text-white font-bold py-2 px-6 rounded-lg shadow">Cadastrar Venda</button>
                     </div>
                 </form>
             </div>
         </section>
+
     </main>
+</div>
 
-    <!-- Modal de Comissão Corrigido -->
-    <div id="comissaoModal" class="modal">
-        <div class="modal-content max-h-[80vh] overflow-y-auto">
-            <span class="modal-close" onclick="fecharModal()">&times;</span>
-            <h3 class="text-xl font-semibold mb-4">Pagar Comissão</h3>
-            <p class="mb-4">Selecione as vendas para pagar a comissão de <span id="nomeVendedorModal"></span>.</p>
-            <div id="vendasPendentesContainer" class="mb-4"></div>
-            <div class="mb-4">
-                <label for="formaPagamentoSelect" class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento</label>
-                <select id="formaPagamentoSelect" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-diamantelar-padrao-500 focus:ring-diamantelar-padrao-500">
-                    <option value="Pix">Pix</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Depósito">Depósito</option>
-                </select>
-            </div>
-            <button onclick="gerarReciboEPagar()" class="bg-diamantelar-padrao-600 hover:bg-diamantelar-padrao-700 text-white font-bold py-2 px-6 rounded-lg shadow transition-colors">Gerar Recibo e Pagar</button>
-        </div>
+<!-- MENSAGEM -->
+<div id="messageContainer" class="fixed bottom-5 right-5 opacity-0 transition-opacity duration-300 z-50">
+    <div id="messageBox" class="p-4 rounded-lg shadow-lg">
+        <p id="messageText"></p>
     </div>
+</div>
 
-    <div id="messageContainer" class="fixed bottom-5 right-5 z-50 transition-opacity duration-300 ease-in-out opacity-0">
-        <div id="messageBox" class="p-4 rounded-lg shadow-lg">
-            <p id="messageText" class="font-medium"></p>
-        </div>
+<!-- MODAL COMISSÃO -->
+<div id="comissaoModal" class="modal flex items-center justify-center">
+    <div class="modal-content">
+        <span class="modal-close" onclick="fecharModal()">&times;</span>
+        <h2 class="text-xl font-semibold mb-4">Comissões de <span id="nomeVendedorModal"></span></h2>
+        <div id="vendasPendentesContainer" class="mb-4 max-h-64 overflow-y-auto text-left"></div>
+        <p class="text-right font-bold mb-4">Total a pagar: <span id="totalComissaoPagar">R$ 0,00</span></p>
+        <button class="bg-diamantelar-apoio-2-600 hover:bg-diamantelar-apoio-2-700 text-white font-bold py-2 px-6 rounded-lg" onclick="pagarComissoesSelecionadas()">Pagar Selecionadas</button>
     </div>
-
 </div>
 
 <script src="script.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    // NAVEGAÇÃO ENTRE PÁGINAS
+    document.querySelectorAll('.nav-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById(btn.dataset.page).classList.add('active');
+            btn.classList.add('active');
+        });
+    });
+
+    function abastecerVendedores(){
+        const select=document.getElementById('vendaVendedor');
+        select.innerHTML='<option value="">Selecione</option>';
+        vendedores.forEach(v=>{ const opt=document.createElement('option'); opt.value=v.id; opt.textContent=v.nome; select.appendChild(opt); });
+    }
+
+    async function pagarComissoesSelecionadas(){
+        const checkboxes=document.querySelectorAll('#vendasPendentesContainer input[type="checkbox"]:checked');
+        const ids=Array.from(checkboxes).map(c=>c.value);
+        if(ids.length===0) return;
+        try{
+            await fetch(SCRIPT_URL,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'pagarComissao', ids})});
+            mostrarMensagem('Comissões pagas com sucesso!');
+            fetchVendas();
+            fecharModal();
+        }catch(e){ console.error(e); mostrarMensagem('Erro ao pagar comissão','erro'); }
+    }
+</script>
+
 </body>
 </html>
