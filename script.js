@@ -1,5 +1,5 @@
 // -------------------- CONFIG --------------------
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhSJQxUyYuIdHKDerAqiE_GopR-2X8LFNhV51lATMJlvzgifmhgOIrBiqqrr3NIQzA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsakMpoeQM_gS9IsxPdUZCJSx0Ph9TTfV9pVq-j9lQVPkD39G74VbZtWjWHZIzJ23k/exec';
 
 let vendedores = [];
 let vendas = [];
@@ -171,4 +171,5 @@ document.getElementById('vendaForm')?.addEventListener('submit', async e=>{
 // -------------------- INICIALIZAÇÃO --------------------
 fetchVendedores();
 fetchVendas();
+
 
