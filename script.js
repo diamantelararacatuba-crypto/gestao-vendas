@@ -1,5 +1,5 @@
 // URL do seu Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyauiAXm1X-Mkx4Tn-QpfpLhRhv0LWOTtufAfx3I7ICH32I4q1mYvuW6fg1NlpIzuE/exec';
+const SCRIPT_URL = 'COLE_AQUI_SUA_URL_DO_APPS_SCRIPT';
 
 // Arrays globais
 let vendedores = [];
@@ -9,7 +9,6 @@ let vendedorParaPagar = null;
 // =================== UTILITÁRIOS ===================
 const formatarMoeda = valor => `R$ ${parseFloat(valor || 0).toFixed(2).replace('.', ',')}`;
 
-// Função para aplicar máscara enquanto digita
 const aplicarMascaraMoeda = (input) => {
     let valor = input.value.replace(/\D/g, '');
     valor = (valor / 100).toFixed(2) + '';
@@ -126,13 +125,15 @@ function renderDashboard() {
 const vendedorForm = document.getElementById('vendedorForm');
 vendedorForm.addEventListener('submit', async e => {
     e.preventDefault();
-    const nome = document.getElementById('vendedorNome').value;
-    const telefone = document.getElementById('vendedorTelefone').value;
-    const cep = document.getElementById('vendedorCep').value;
-    const rua = document.getElementById('vendedorRua').value;
-    const numero = document.getElementById('vendedorNumero').value;
-    const bairro = document.getElementById('vendedorBairro').value;
-    const cidade = document.getElementById('vendedorCidade').value;
+    const nome = document.getElementById('vendedorNome').value.trim();
+    const telefone = document.getElementById('vendedorTelefone').value.trim();
+    const cep = document.getElementById('vendedorCep').value.trim();
+    const rua = document.getElementById('vendedorRua').value.trim();
+    const numero = document.getElementById('vendedorNumero').value.trim();
+    const bairro = document.getElementById('vendedorBairro').value.trim();
+    const cidade = document.getElementById('vendedorCidade').value.trim();
+
+    if (!nome) return mostrarMensagem('O nome é obrigatório', 'erro');
 
     try {
         await fetch(`${SCRIPT_URL}?sheet=Vendedores&nome=${encodeURIComponent(nome)}&telefone=${encodeURIComponent(telefone)}&cep=${cep}&rua=${encodeURIComponent(rua)}&numero=${numero}&bairro=${encodeURIComponent(bairro)}&cidade=${encodeURIComponent(cidade)}`);
@@ -172,11 +173,13 @@ const vendaForm = document.getElementById('vendaForm');
 vendaForm.addEventListener('submit', async e => {
     e.preventDefault();
     const vendedorId = document.getElementById('vendaVendedor').value;
-    const descricao = document.getElementById('vendaDescricao').value;
+    const descricao = document.getElementById('vendaDescricao').value.trim();
     const valorTotal = document.getElementById('vendaValorTotal').value.replace(/\D/g,'') / 100;
     const valorComissao = document.getElementById('vendaValorComissao').value.replace(/\D/g,'') / 100;
     const tipoPagamento = document.getElementById('tipoPagamento').value;
     const valorEntrada = document.getElementById('valorEntrada').value.replace(/\D/g,'') / 100 || 0;
+
+    if (!vendedorId) return mostrarMensagem('Selecione um vendedor', 'erro');
 
     try {
         await fetch(`${SCRIPT_URL}?sheet=Vendas&vendedorId=${vendedorId}&descricao=${encodeURIComponent(descricao)}&valorTotal=${valorTotal}&valorComissao=${valorComissao}&tipoPagamento=${tipoPagamento}&valorEntrada=${valorEntrada}`);
