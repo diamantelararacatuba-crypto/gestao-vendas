@@ -235,3 +235,4 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchVendas();
     mostrarPaginaDashboard();
 });
+
