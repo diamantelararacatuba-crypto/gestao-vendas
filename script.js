@@ -1,5 +1,4 @@
 // URL do seu Apps Script (COLE AQUI A URL APÓS IMPLANTAÇÃO)
-// A URL foi atualizada com a nova que você forneceu.
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyauiAXm1X-Mkx4Tn-QpfpLhRhv0LWOTtufAfx3I7ICH32I4q1mYvuW6fg1NlpIzuE/exec';
 
 // Variáveis globais para armazenar os dados e o estado do modal
@@ -7,7 +6,7 @@ let vendedores = [];
 let vendas = [];
 let vendedorParaPagar = null;
 
-// Funções utilitárias
+// ------------------- Funções utilitárias -------------------
 const formatarMoeda = (valor) => {
     return `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`;
 };
@@ -69,7 +68,7 @@ const mostrarMensagem = (texto, tipo) => {
     }, 5000);
 };
 
-// Funções de comunicação com o Google Sheets
+// ------------------- Funções de comunicação com o Google Sheets -------------------
 const fetchVendedores = async () => {
     try {
         const response = await fetch(`${SCRIPT_URL}?sheet=Vendedores`);
@@ -85,6 +84,7 @@ const fetchVendedores = async () => {
             cidade: v.Cidade
         }));
         abastecerVendedores();
+        renderDashboard();
     } catch (error) {
         console.error('Erro ao buscar vendedores:', error);
     }
@@ -110,7 +110,7 @@ const fetchVendas = async () => {
     }
 };
 
-// Renderiza a dashboard
+// ------------------- Render Dashboard -------------------
 const renderDashboard = () => {
     const dashboardContent = document.getElementById('dashboardContent');
     dashboardContent.innerHTML = '';
@@ -150,9 +150,10 @@ const renderDashboard = () => {
     });
 };
 
-// Abastece o dropdown de vendedores
+// ------------------- Abastecer dropdown -------------------
 const abastecerVendedores = () => {
     const select = document.getElementById('vendaVendedor');
+    if (!select) return;
     select.innerHTML = '<option value="">Selecione um vendedor</option>';
     vendedores.forEach(vendedor => {
         const option = document.createElement('option');
@@ -162,7 +163,7 @@ const abastecerVendedores = () => {
     });
 };
 
-// Funções do Modal de Comissão
+// ------------------- Modal Comissão -------------------
 const abrirModal = (vendedorId) => {
     vendedorParaPagar = vendedorId;
     const vendedor = vendedores.find(v => v.id === vendedorId);
@@ -181,9 +182,7 @@ const atualizarTotalPagar = () => {
     checkboxes.forEach(checkbox => {
         const vendaId = parseInt(checkbox.value);
         const venda = vendas.find(v => v.id === vendaId);
-        if (venda) {
-            total += venda.valorComissao;
-        }
+        if (venda) total += venda.valorComissao;
     });
     document.getElementById('totalComissaoPagar').textContent = formatarMoeda(total);
 };
@@ -205,5 +204,34 @@ const renderizarVendasPendentes = () => {
         div.className = 'venda-item cursor-pointer hover:bg-gray-50 transition-colors';
         div.innerHTML = `
             <input type="checkbox" value="${venda.id}" onchange="atualizarTotalPagar()" class="form-checkbox text-diamantelar-padrao-600 rounded">
-            <div class="flex-1">
-                <p class="font
+            <span class="ml-2">${venda.descricao} - ${formatarMoeda(venda.valorComissao)}</span>
+        `;
+        container.appendChild(div);
+    });
+};
+
+// ------------------- Navegação entre páginas -------------------
+const mostrarPaginaDashboard = () => {
+    document.getElementById('dashboardPage').style.display = 'block';
+    document.getElementById('cadastroVendedorPage').style.display = 'none';
+    document.getElementById('cadastroVendaPage').style.display = 'none';
+};
+
+const mostrarPaginaCadastroVendedor = () => {
+    document.getElementById('dashboardPage').style.display = 'none';
+    document.getElementById('cadastroVendedorPage').style.display = 'block';
+    document.getElementById('cadastroVendaPage').style.display = 'none';
+};
+
+const mostrarPaginaCadastroVenda = () => {
+    document.getElementById('dashboardPage').style.display = 'none';
+    document.getElementById('cadastroVendedorPage').style.display = 'none';
+    document.getElementById('cadastroVendaPage').style.display = 'block';
+};
+
+// ------------------- Inicialização -------------------
+window.addEventListener('DOMContentLoaded', () => {
+    fetchVendedores();
+    fetchVendas();
+    mostrarPaginaDashboard();
+});
