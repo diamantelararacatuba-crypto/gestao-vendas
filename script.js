@@ -261,3 +261,4 @@ document.getElementById('vendedorCep').addEventListener('blur', async e=>{
 // -------------------- INIT --------------------
 fetchVendedores();
 fetchVendas();
+
