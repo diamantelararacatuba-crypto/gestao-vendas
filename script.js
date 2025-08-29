@@ -1,5 +1,5 @@
 // URL do seu Apps Script
-const SCRIPT_URL = 'COLE_AQUI_SUA_URL_DO_APPS_SCRIPT';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyauiAXm1X-Mkx4Tn-QpfpLhRhv0LWOTtufAfx3I7ICH32I4q1mYvuW6fg1NlpIzuE/exec';
 
 // Arrays globais
 let vendedores = [];
@@ -237,3 +237,4 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchVendedores();
     fetchVendas();
 });
+
