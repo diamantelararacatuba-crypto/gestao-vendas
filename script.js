@@ -195,6 +195,27 @@ function abrirModal(vendedorId) {
     vendedorParaPagar = vendedorId;
     const vendedor = vendedores.find(v => v.id === vendedorId);
     document.getElementById('nomeVendedorModal').textContent = vendedor.nome;
+
+    const container = document.getElementById('vendasPendentesContainer');
+    container.innerHTML = '';
+
+    const vendasPendentes = vendas.filter(v => v.vendedorId === vendedorId && !v.comissaoPaga);
+    if (vendasPendentes.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500">Nenhuma comissão pendente.</p>';
+    } else {
+        vendasPendentes.forEach(venda => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between border-b py-2';
+            div.innerHTML = `
+                <label class="flex-1 cursor-pointer">
+                    <input type="checkbox" value="${venda.id}" class="mr-2">
+                    [${venda.id}] ${venda.descricao} - ${formatarMoeda(venda.valorComissao)}
+                </label>
+            `;
+            container.appendChild(div);
+        });
+    }
+
     document.getElementById('comissaoModal').style.display = 'flex';
 }
 
@@ -203,27 +224,36 @@ function fecharModal() {
 }
 
 async function gerarReciboEPagar() {
-    if (!vendedorParaPagar) return;
+    const checkboxes = document.querySelectorAll('#vendasPendentesContainer input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) return mostrarMensagem('Selecione pelo menos uma venda', 'erro');
 
     const formaPagamento = document.getElementById('formaPagamentoSelect').value;
-    const vendasPendentes = vendas.filter(v => v.vendedorId === vendedorParaPagar && !v.comissaoPaga);
-    const totalComissao = vendasPendentes.reduce((t, v) => t + (v.valorComissao || 0), 0);
+    const vendasSelecionadas = checkboxesArray(checkboxes).map(c => vendas.find(v => v.id == c.value));
 
-    if (totalComissao === 0) return mostrarMensagem('Nenhuma comissão pendente', 'erro');
-
-    for (const venda of vendasPendentes) {
+    // Atualiza no Google Sheets
+    for (const venda of vendasSelecionadas) {
         const url = `${SCRIPT_URL}?sheet=Vendas&action=pay&id=${venda.id}&formaPagamento=${encodeURIComponent(formaPagamento)}`;
         await fetch(url);
     }
 
+    // Gera PDF
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text(`Recibo de Comissão - Diamantelar`, 20, 20);
     doc.setFontSize(12);
-    doc.text(`Vendedor: ${vendedores.find(v=>v.id===vendedorParaPagar).nome}`, 20, 40);
-    doc.text(`Total Comissão: ${formatarMoeda(totalComissao)}`, 20, 50);
-    doc.text(`Forma de Pagamento: ${formaPagamento}`, 20, 60);
+    doc.text(`Vendedor: ${vendedores.find(v => v.id === vendedorParaPagar).nome}`, 20, 35);
+
+    let y = 50;
+    let total = 0;
+    vendasSelecionadas.forEach(v => {
+        doc.text(`[${v.id}] ${v.descricao} - ${formatarMoeda(v.valorComissao)}`, 20, y);
+        total += v.valorComissao;
+        y += 10;
+    });
+
+    doc.text(`Total Comissão: ${formatarMoeda(total)}`, 20, y + 5);
+    doc.text(`Forma de Pagamento: ${formaPagamento}`, 20, y + 15);
     doc.save(`Recibo_Comissao_${Date.now()}.pdf`);
 
     fecharModal();
@@ -231,12 +261,15 @@ async function gerarReciboEPagar() {
     fetchVendas();
 }
 
+function checkboxesArray(checkboxes) {
+    return Array.prototype.slice.call(checkboxes);
+}
+
 // ===================== INICIALIZAÇÃO =====================
 window.addEventListener('DOMContentLoaded', () => {
     fetchVendedores();
     fetchVendas();
 
-    // Aplicar máscaras
     document.getElementById('vendedorTelefone').addEventListener('input', e => aplicarMascaraTelefone(e.target));
     document.getElementById('vendaValorTotal').addEventListener('input', e => aplicarMascaraMoeda(e.target));
     document.getElementById('vendaValorComissao').addEventListener('input', e => aplicarMascaraMoeda(e.target));
