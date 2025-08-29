@@ -275,3 +275,24 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('vendaValorComissao').addEventListener('input', e => aplicarMascaraMoeda(e.target));
     document.getElementById('valorEntrada').addEventListener('input', e => aplicarMascaraMoeda(e.target));
 });
+
+// Função para preencher endereço automaticamente pelo CEP
+const preencherEnderecoPeloCEP = async () => {
+    const cep = document.getElementById('vendedorCep').value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    try {
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+        if (!data.erro) {
+            document.getElementById('vendedorRua').value = data.logradouro;
+            document.getElementById('vendedorBairro').value = data.bairro;
+            document.getElementById('vendedorCidade').value = data.localidade;
+        }
+    } catch (err) {
+        console.error('Erro ao buscar CEP:', err);
+    }
+};
+
+// Adicionar listener no input de CEP
+document.getElementById('vendedorCep').addEventListener('blur', preencherEnderecoPeloCEP);
