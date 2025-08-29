@@ -1,6 +1,6 @@
 // -------------------- CONFIG --------------------
 // URL da implantação do Google Apps Script
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsakMpoeQM_gS9IsxPdUZCJSx0Ph9TTfV9pVq-j9lQVPkD39G74VbZtWjWHZIzJ23k/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWPGpVofNk-qu6EsSeEUMLybO3_CM0sg6D76ObGQhaCArbJ_PRE4jjhHMjLyFlguRt/exec';
 
 let vendedores = [];
 let vendas = [];
@@ -175,3 +175,4 @@ document.getElementById('vendaForm').reset();
 // -------------------- INICIALIZAÇÃO --------------------
 fetchVendedores();
 fetchVendas();
+
